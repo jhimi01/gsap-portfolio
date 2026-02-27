@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+:root {
+  --bg-color: rgba(255, 255, 255, 0.6);
+  --text-primary: #2d2a26;
+  --text-secondary: #5c554b;
+  --accent-color: #984216; /* Rust orange */
+  --accent-glow: rgba(152, 66, 22, 0.4);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --surface-color: rgba(255, 255, 255, 0.4);
+  
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+  
+  --section-padding: 6rem 2rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f6efe1; /* Soft warm under-layer so the blob is visible */
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none; /* Hide default cursor to use custom cursor */
+}
+
+/* Global Container for the Glass effect */
+.app-glass {
+  background-color: var(--bg-color);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-sans);
+  border: none;
+  outline: none;
+  background: none;
+}
+
+/* Global Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section {
+  padding: var(--section-padding);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+}
+
+/* Gradient Text utility */
+.gradient-text {
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Hero Grid Redesign --- */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 2.5fr 2fr 80px;
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hero-cell {
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-cell.empty {
+  padding: 0;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  align-items: center;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.vertical-text:hover {
+  color: var(--accent-color);
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-cell {
+    grid-column: span 1 !important;
+    padding: 2rem;
+  }
+  .hero-cell.empty {
+    display: none;
+  }
+  .vertical-text {
+    writing-mode: horizontal-tb;
+    transform: none;
+    padding: 1rem;
+  }
+}
