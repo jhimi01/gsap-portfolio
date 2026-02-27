@@ -138,6 +138,33 @@ button {
   color: var(--text-secondary);
   transition: color 0.3s ease;
 }
+/* Footer Styles */
+.footer-link:hover {
+  color: var(--accent-color) !important;
+  transform: translateX(5px);
+}
+
+.back-to-top:hover {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+  transform: translateY(-5px) scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3rem !important;
+    text-align: center !important;
+  }
+  .footer-container > div {
+    grid-column: auto !important;
+    align-items: center !important;
+  }
+  .back-to-top {
+    margin: 0 auto;
+  }
+}
 
 .vertical-text:hover {
   color: var(--accent-color);

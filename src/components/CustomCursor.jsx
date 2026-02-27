@@ -1,119 +1,139 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import brown_flower from '/brown_flower.png';
 
 const CustomCursor = () => {
-  const cursorRef = useRef(null);
-  const followerRef = useRef(null);
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
+  const labelRef = useRef(null);
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    const cursor = cursorRef.current;
-    const follower = followerRef.current;
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    const label = labelRef.current;
 
-    const xToCursor = gsap.quickTo(cursor, "x", { duration: 0.1, ease: "power3" });
-    const yToCursor = gsap.quickTo(cursor, "y", { duration: 0.1, ease: "power3" });
+    // Different speeds for the "lag" effect
+    const xToDot = gsap.quickTo(dot, "x", { duration: 0.08, ease: "power3" });
+    const yToDot = gsap.quickTo(dot, "y", { duration: 0.08, ease: "power3" });
     
-    // Smooth trailing effect for the background blob
-    const xToFollower = gsap.quickTo(follower, "x", { duration: 0.8, ease: "power3" });
-    const yToFollower = gsap.quickTo(follower, "y", { duration: 0.8, ease: "power3" });
+    const xToRing = gsap.quickTo(ring, "x", { duration: 0.35, ease: "power2.out" });
+    const yToRing = gsap.quickTo(ring, "y", { duration: 0.35, ease: "power2.out" });
 
-  let lastX = 0;
-let lastY = 0;
-
-const moveCursor = (e) => {
-  xToCursor(e.clientX);
-  yToCursor(e.clientY);
-
-  xToFollower(e.clientX);
-  yToFollower(e.clientY);
-
-  const deltaX = e.clientX - lastX;
-  const deltaY = e.clientY - lastY;
-
-  const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-
-  gsap.to(cursor, { rotate: angle, duration: 0.2 });
-
-  lastX = e.clientX;
-  lastY = e.clientY;
-};
+    const moveCursor = (e) => {
+      xToDot(e.clientX);
+      yToDot(e.clientY);
+      xToRing(e.clientX);
+      yToRing(e.clientY);
+    };
 
     window.addEventListener('mousemove', moveCursor);
 
-    // Add pointer events logic for hovering
-    const handleHover = () => {
-      gsap.to(cursor, { scale: 1.5, duration: 0.3 });
-      gsap.to(follower, { scale: 0.8, backgroundColor: 'var(--accent-color)', duration: 0.3 });
+    // Contextual Hover Logic
+    const handleHover = (e) => {
+      setIsHovering(true);
+      gsap.to(dot, { scale: 0.5, backgroundColor: '#fff', duration: 0.3 });
+      gsap.to(ring, { 
+        scale: 2.2, 
+        backgroundColor: 'var(--accent-color)',
+        borderWidth: '0px',
+        duration: 0.4,
+        ease: "back.out(1.7)"
+      });
+      gsap.to(label, { opacity: 1, scale: 1, y: -40, duration: 0.3 });
     };
 
     const handleHoverOut = () => {
-      gsap.to(cursor, { scale: 1, duration: 0.3 });
-      gsap.to(follower, { scale: 1, backgroundColor: 'var(--accent-glow)', duration: 0.3 });
+      setIsHovering(false);
+      gsap.to(dot, { scale: 1, backgroundColor: 'var(--accent-color)', duration: 0.3 });
+      gsap.to(ring, { 
+        scale: 1, 
+        backgroundColor: 'transparent',
+        borderWidth: '1.5px',
+        duration: 0.4,
+        ease: "power2.out"
+      });
+      gsap.to(label, { opacity: 0, scale: 0.5, y: 0, duration: 0.3 });
     };
 
-    const links = document.querySelectorAll('a, button, .hero-cell.vertical-text');
-    links.forEach(link => {
-      link.addEventListener('mouseenter', handleHover);
-      link.addEventListener('mouseleave', handleHoverOut);
-    });
+    // Attach to all interactive elements
+    const updateListeners = () => {
+      const interactives = document.querySelectorAll('a, button, .hero-cell.vertical-text, .project-card, .service-item');
+      interactives.forEach(el => {
+        el.addEventListener('mouseenter', handleHover);
+        el.addEventListener('mouseleave', handleHoverOut);
+      });
+    };
+
+    updateListeners();
+    
+    // Periodically re-check for dynamic elements (like projects getting loaded)
+    const observer = new MutationObserver(updateListeners);
+    observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      links.forEach(link => {
-        link.removeEventListener('mouseenter', handleHover);
-        link.removeEventListener('mouseleave', handleHoverOut);
-      });
+      observer.disconnect();
     };
   }, []);
 
   return (
     <>
+      {/* Outer Ring */}
       <div 
-        ref={followerRef}
+        ref={ringRef}
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '400px',
-          height: '400px',
+          width: '40px',
+          height: '40px',
           borderRadius: '50%',
-          backgroundColor: 'var(--accent-glow)',
-          filter: 'blur(60px)',
+          border: '1.5px solid var(--accent-color)',
           transform: 'translate(-50%, -50%)',
           pointerEvents: 'none',
-          zIndex: 0, // Behind the glass container
+          zIndex: 999998,
+          transition: 'border-color 0.3s ease',
         }}
       />
-      {/* <div 
-        ref={cursorRef}
+
+      {/* Inner Dot */}
+      <div 
+        ref={dotRef}
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '12px',
-          height: '12px',
+          width: '8px',
+          height: '8px',
           borderRadius: '50%',
           backgroundColor: 'var(--accent-color)',
           transform: 'translate(-50%, -50%)',
           pointerEvents: 'none',
-          zIndex: 9999, // On top of everything
+          zIndex: 999999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
-      /> */}
-        <img
-          ref={cursorRef}
-          src={brown_flower}
-          alt="cursor"
+      >
+        {/* Floating Label */}
+        <span 
+          ref={labelRef}
           style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '32px',
-            height: '32px',
-            transform: 'translate(-50%, -50%)',
+            position: 'absolute',
+            color: 'var(--text-primary)',
+            fontSize: '0.6rem',
+            fontWeight: 800,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            opacity: 0,
+            whiteSpace: 'nowrap',
             pointerEvents: 'none',
-            zIndex: 999999, // Ensure it is above MenuOverlay's 9999
+            fontFamily: 'var(--font-mono)'
           }}
-        />
+        >
+          VIEW
+        </span>
+      </div>
     </>
   );
 };

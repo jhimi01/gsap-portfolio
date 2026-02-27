@@ -34,21 +34,29 @@ const Hero = ({ runAnimation, onOpenMenu }) => {
         <div className="hero-cell empty"></div>
         <div className="hero-cell empty">
         </div>
-        <div className="hero-cell empty" style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          
-           <button 
-           onClick={() => {
-  console.log("menu clicked");
-  onOpenMenu();
-}}
-            style={{ 
-              color: 'var(--accent-color)', 
-              transition: 'transform 0.3s ease',
+        <div className="hero-cell empty" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+          <button 
+            onClick={() => {
+              console.log("menu clicked");
+              onOpenMenu();
             }}
-            onMouseOver={(e) => e.currentTarget.style.transform = 'translateX(10px)'}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'translateX(0)'}>
-             <Menu size={29} />
-            </button>
+            style={{ 
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--accent-color)', 
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              zIndex: 1000, // Ensure it's above other grid elements
+              cursor: 'pointer'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--accent-color)'}
+          >
+            <Menu size={29} />
+          </button>
         </div>
 
         {/* Row 2 */}
