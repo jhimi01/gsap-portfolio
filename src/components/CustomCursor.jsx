@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import brown_flower from '/brown_flower.png';
 
 const CustomCursor = () => {
   const cursorRef = useRef(null);
@@ -16,13 +17,26 @@ const CustomCursor = () => {
     const xToFollower = gsap.quickTo(follower, "x", { duration: 0.8, ease: "power3" });
     const yToFollower = gsap.quickTo(follower, "y", { duration: 0.8, ease: "power3" });
 
-    const moveCursor = (e) => {
-      // Center the elements on the mouse
-      xToCursor(e.clientX);
-      yToCursor(e.clientY);
-      xToFollower(e.clientX);
-      yToFollower(e.clientY);
-    };
+  let lastX = 0;
+let lastY = 0;
+
+const moveCursor = (e) => {
+  xToCursor(e.clientX);
+  yToCursor(e.clientY);
+
+  xToFollower(e.clientX);
+  yToFollower(e.clientY);
+
+  const deltaX = e.clientX - lastX;
+  const deltaY = e.clientY - lastY;
+
+  const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+
+  gsap.to(cursor, { rotate: angle, duration: 0.2 });
+
+  lastX = e.clientX;
+  lastY = e.clientY;
+};
 
     window.addEventListener('mousemove', moveCursor);
 
@@ -70,7 +84,7 @@ const CustomCursor = () => {
           zIndex: 0, // Behind the glass container
         }}
       />
-      <div 
+      {/* <div 
         ref={cursorRef}
         style={{
           position: 'fixed',
@@ -84,7 +98,22 @@ const CustomCursor = () => {
           pointerEvents: 'none',
           zIndex: 9999, // On top of everything
         }}
-      />
+      /> */}
+        <img
+          ref={cursorRef}
+          src={brown_flower}
+          alt="cursor"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '32px',
+            height: '32px',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none',
+            zIndex: 999999, // Ensure it is above MenuOverlay's 9999
+          }}
+        />
     </>
   );
 };

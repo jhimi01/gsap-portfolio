@@ -76,7 +76,7 @@ const Intro = ({ onComplete }) => {
       >
         <div style={{ overflow: 'hidden' }}>
           <h1 className="welcome-text gradient-text" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)' }}>
-            Welcome.
+            Good Morning.
           </h1>
         </div>
       </div>

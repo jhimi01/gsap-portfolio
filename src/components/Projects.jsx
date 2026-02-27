@@ -1,9 +1,4 @@
-import React, { useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger);
+import React from 'react';
 
 const projects = [
   {
@@ -21,57 +16,58 @@ const projects = [
 ];
 
 const Projects = () => {
-  const containerRef = useRef(null);
-  const scrollContainerRef = useRef(null);
+  const scrollRef = React.useRef(null);
 
-  useGSAP(() => {
-    // We want the scrollContainer to slide all the way to its end
-    const getScrollAmount = () => {
-      let scrollWidth = scrollContainerRef.current.scrollWidth;
-      return -(scrollWidth - window.innerWidth);
-    };
-
-    const tween = gsap.to(scrollContainerRef.current, {
-      x: getScrollAmount,
-      ease: "none"
-    });
-
-    ScrollTrigger.create({
-      trigger: containerRef.current,
-      start: "top top",
-      // Adding extra multiplier just so it scrolls at a comfortable speed
-      end: () => `+=${getScrollAmount() * -1}`,
-      pin: true,
-      animation: tween,
-      scrub: 1,
-      invalidateOnRefresh: true // Recalculate if window resizes!
-    });
-  }, { scope: containerRef });
+  const scrollContainer = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = window.innerWidth * 0.35; // scroll roughly one card length at a time
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
     <section 
       id="projects" 
-      ref={containerRef} 
       style={{ 
         height: '100vh', 
         backgroundColor: 'var(--text-secondary)',
-        overflow: 'hidden',
         position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        // Hide vertical, handle horizontal inside the container
+        overflowY: 'hidden',
       }}
     >
-      {/* Wrapper that will animate left linearly */}
+      {/* Scrollable Container */}
       <div 
-        ref={scrollContainerRef}
+        ref={scrollRef}
         style={{
           display: 'flex',
           height: '100%',
-          width: 'fit-content', // this is crucial so it fits exactly the content (header + cards + gaps)
+          width: '100%',
           alignItems: 'center',
+          overflowX: 'auto',
+          overflowY: 'hidden',
           paddingLeft: '10vw',
-          paddingRight: '10vw',
-          gap: '5vw'
+          gap: '5vw',
+          /* Hide default scrollbar properties */
+          scrollbarWidth: 'none', /* Firefox */
+          msOverflowStyle: 'none', /* IE/Edge */
         }}
+        className="hide-scrollbar"
       >
+        <style>
+          {`
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            .hide-scrollbar::-webkit-scrollbar {
+              display: none;
+            }
+          `}
+        </style>
+        
         {/* Fixed Title block */}
         <div style={{
           width: '25vw',
@@ -80,7 +76,7 @@ const Projects = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          flexShrink: 0 // Prevent squishing
+          flexShrink: 0
         }}>
           <h2 style={{ 
             fontSize: 'clamp(3rem, 5vw, 4.5rem)', 
@@ -89,16 +85,44 @@ const Projects = () => {
             marginBottom: '1rem',
             fontFamily: 'var(--font-sans)',
           }}>
-            PROBLEM
+            PROJECTS
           </h2>
           <p style={{ 
             fontSize: '0.9rem', 
             lineHeight: 1.6, 
             color: 'var(--bg-color)', 
-            opacity: 0.8 
+            opacity: 0.8,
+            marginBottom: '3rem'
           }}>
             Small businesses face a major challenge in delivering the level of customer support modern consumers expect.
           </p>
+
+          <div style={{ display: 'flex', gap: '2rem' }}>
+            <button 
+              onClick={() => scrollContainer('left')}
+              style={{ 
+                color: 'var(--bg-color)', 
+                fontSize: '2rem',
+                transition: 'transform 0.3s ease',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'translateX(-10px)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'translateX(0)'}
+            >
+              ←
+            </button>
+            <button 
+              onClick={() => scrollContainer('right')}
+              style={{ 
+                color: 'var(--bg-color)', 
+                fontSize: '2rem',
+                transition: 'transform 0.3s ease',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'translateX(10px)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'translateX(0)'}
+            >
+              →
+            </button>
+          </div>
         </div>
 
         {/* The Cards */}
@@ -117,7 +141,8 @@ const Projects = () => {
               flexDirection: 'column',
               justifyContent: 'space-between',
               boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-              flexShrink: 0 // Prevent squishing
+              flexShrink: 0,
+              overflow: 'hidden'
             }}
           >
             {/* Card Header (Number) */}
@@ -152,6 +177,9 @@ const Projects = () => {
             </div>
           </div>
         ))}
+
+        {/* Buffer to ensure the last card has padding on the right */}
+        <div style={{ minWidth: '5vw', flexShrink: 0 }}></div>
       </div>
     </section>
   );

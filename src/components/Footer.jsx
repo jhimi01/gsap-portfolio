@@ -9,19 +9,20 @@ const Footer = () => {
       flexDirection: 'column',
       alignItems: 'center',
       borderTop: '1px solid var(--border-color)',
-      backgroundColor: 'var(--bg-color)',
+      // backgroundColor: 'var(--bg-color)',
+      backgroundColor: 'var(--text-secondary)',
       // backgroundColor: 'var(--text-secondary)',
       marginTop: '4rem',
-      // color: 'var(--bg-color)'
+      color: 'var(--bg-color)'
     }}>
       <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem' }}>
-        <a href="https://github.com" target="_blank" rel="noreferrer" style={{ color: 'var(--text-secondary)' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-color)'} onMouseOut={(e) => e.target.style.color = 'var(--text-secondary)'}>
+        <a href="https://github.com" target="_blank" rel="noreferrer"  onMouseOver={(e) => e.target.style.color = 'var(--accent-color)'} onMouseOut={(e) => e.target.style.color = 'var(--text-secondary)'}>
           <Github size={24} />
         </a>
-        <a href="https://linkedin.com" target="_blank" rel="noreferrer" style={{ color: 'var(--text-secondary)' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-color)'} onMouseOut={(e) => e.target.style.color = 'var(--text-secondary)'}>
+        <a href="https://linkedin.com" target="_blank" rel="noreferrer"  onMouseOver={(e) => e.target.style.color = 'var(--accent-color)'} onMouseOut={(e) => e.target.style.color = 'var(--text-secondary)'}>
           <Linkedin size={24} />
         </a>
-        <a href="mailto:hello@example.com" style={{ color: 'var(--text-secondary)' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-color)'} onMouseOut={(e) => e.target.style.color = 'var(--text-secondary)'}>
+        <a href="mailto:hello@example.com"  onMouseOver={(e) => e.target.style.color = 'var(--accent-color)'} onMouseOut={(e) => e.target.style.color = 'var(--text-secondary)'}>
           <Mail size={24} />
         </a>
       </div>
