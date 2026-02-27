@@ -82,38 +82,172 @@ const About = () => {
         .from(textGroup, { y: 30, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.3');
     });
 
+    // 4. Infinite Scrolling Marquees for Skills
+    const tickers = gsap.utils.toArray('.ticker-content');
+    const durations = [35, 45, 40]; // Vary speeds for more depth
+
+    tickers.forEach((ticker, index) => {
+      const isLTR = index === 1; 
+      const distance = ticker.scrollWidth / 3; 
+
+      if (isLTR) {
+        gsap.set(ticker, { x: -distance });
+        gsap.to(ticker, {
+          x: 0,
+          ease: "none",
+          duration: durations[index],
+          repeat: -1,
+        });
+      } else {
+        gsap.to(ticker, {
+          x: -distance,
+          ease: "none",
+          duration: durations[index],
+          repeat: -1,
+        });
+      }
+    });
+
   }, { scope: container });
+
+  const frontendSkills = [
+    'React', 'Next.js', 'Vite', 'HTML5', 'CSS3', 'JavaScript', 'Tailwind', 'Styled Components'
+  ];
+
+  const backendSkills = [
+    'Node.js', 'Express', 'MongoDB', 'PostgreSQL', 'Firebase', 'REST API', 'GraphQL', 'Prisma'
+  ];
+
+  const toolSkills = [
+    'Git', 'Figma', 'GSAP', 'Redux', 'Zustand', 'Postman', 'Docker', 'Vercel'
+  ];
+
+  const renderMarquee = (title, skillsList) => (
+    <div className="marquee-wrapper" style={{ 
+      marginTop: '6rem', 
+      position: 'relative',
+      paddingBottom: '2rem'
+    }}>
+      {/* Side Masks for soft fade out */}
+      <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '25%',
+          height: '100%',
+          background: 'linear-gradient(to right, var(--bg-color) 20%, transparent)',
+          zIndex: 5,
+          pointerEvents: 'none'
+      }}></div>
+      <div style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: '25%',
+          height: '100%',
+          background: 'linear-gradient(to left, var(--bg-color) 20%, transparent)',
+          zIndex: 5,
+          pointerEvents: 'none'
+      }}></div>
+
+      <div className="container" style={{ position: 'relative', zIndex: 1, marginBottom: '2.5rem' }}>
+        <p style={{ 
+            fontFamily: 'var(--font-mono)', 
+            fontSize: '0.75rem', 
+            fontWeight: 800, 
+            color: 'var(--accent-color)',
+            letterSpacing: '0.4em',
+            textTransform: 'uppercase',
+            opacity: 0.8
+        }}>
+            {title}
+        </p>
+      </div>
+      
+      <div style={{ display: 'flex', width: 'fit-content', position: 'relative', zIndex: 2 }}>
+        <div className="ticker-content" style={{ display: 'flex', gap: '5rem', alignItems: 'center', whiteSpace: 'nowrap' }}>
+          {[...skillsList, ...skillsList, ...skillsList].map((skill, index) => (
+            <React.Fragment key={index}>
+                <span style={{
+                    fontSize: 'clamp(3rem, 7vw, 6.5rem)',
+                    fontWeight: 900,
+                    color: 'var(--text-primary)',
+                    fontFamily: 'var(--font-sans)',
+                    letterSpacing: '-0.04em',
+                    transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                    cursor: 'default',
+                    opacity: 0.15,
+                    textTransform: 'uppercase'
+                    }}
+                    onMouseOver={(e) => {
+                        e.currentTarget.style.opacity = '1';
+                        e.currentTarget.style.transform = 'scale(1.02)';
+                    }}
+                    onMouseOut={(e) => {
+                        e.currentTarget.style.opacity = '0.15';
+                        e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                >
+                    {skill}
+                </span>
+                <span style={{ 
+                    width: '12px', 
+                    height: '12px', 
+                    borderRadius: '50%', 
+                    backgroundColor: 'var(--accent-color)', 
+                    opacity: 0.3 
+                }}></span>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <section id="about" ref={container} style={{ 
       backgroundColor: 'var(--bg-color)',
       color: 'var(--text-primary)',
-      paddingTop: '8rem',
+      paddingTop: '10rem',
       paddingBottom: '10rem',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      position: 'relative'
     }}>
       <div className="container timeline-container" style={{ position: 'relative', width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
         
-        <h2 className="timeline-header" style={{ fontSize: 'clamp(3rem, 6vw, 4.5rem)', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '6rem', letterSpacing: '-0.04em' }}>
-          My Journey
-        </h2>
+        <div style={{ textAlign: 'center', marginBottom: '8rem' }}>
+            <p style={{ 
+                fontFamily: 'var(--font-mono)', 
+                fontSize: '0.9rem', 
+                color: 'var(--accent-color)', 
+                letterSpacing: '0.3em',
+                marginBottom: '1rem'
+            }}>02 / DISCOVER</p>
+            <h2 className="timeline-header" style={{ 
+                fontSize: 'clamp(3.5rem, 8vw, 6rem)', 
+                fontWeight: 800, 
+                color: 'var(--text-primary)', 
+                lineHeight: 1,
+                letterSpacing: '-0.05em' 
+            }}>
+            My Journey.
+            </h2>
+        </div>
         
-        {/* Main Vertical Line */}
         <div style={{ position: 'relative' }}>
-          {/* This wrapper ensures the line maps correctly to the content height */}
           <div className="timeline-vertical-line" style={{ 
             position: 'absolute', 
             top: 0, 
             bottom: 0, 
             left: '50%', 
-            width: '2px', 
-            backgroundColor: 'currentColor', 
-            opacity: 0.2, 
+            width: '1px', 
+            backgroundColor: 'var(--text-primary)', 
+            opacity: 0.1, 
             transform: 'translateX(-50%)',
             zIndex: 1 
           }}></div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10rem' }}>
             {timelineData.map((item, index) => {
               const isLeft = index % 2 === 0;
               const Icon = item.icon;
@@ -121,101 +255,47 @@ const About = () => {
               return (
                 <div key={index} className={`timeline-item ${isLeft ? 'timeline-left' : 'timeline-right'}`} style={{ 
                   display: 'grid', 
-                  gridTemplateColumns: 'minmax(0, 1fr) 4rem minmax(0, 1fr)', 
+                  gridTemplateColumns: '1fr 6rem 1fr', 
                   width: '100%', 
                   position: 'relative',
-                  zIndex: 2
+                  zIndex: 2,
+                  alignItems: 'center'
                 }}>
                   
-                  {/* Left Column */}
-                  <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    alignItems: 'flex-end', 
-                    textAlign: 'right', 
-                    position: 'relative'
-                  }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: isLeft ? 'flex-end' : 'flex-start', textAlign: isLeft ? 'right' : 'left', opacity: isLeft ? 1 : 0.05, filter: isLeft ? 'none' : 'blur(2px)' }}>
                     {isLeft && (
-                      <div style={{ width: '100%' }}>
-                        {/* Dotted line & Icon row */}
-                        <div style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative' }}>
-                          <div className="icon-circle" style={{ 
-                            width: '50px', height: '50px', borderRadius: '50%', 
-                            backgroundColor: 'var(--text-primary)', color: 'var(--bg-color)', 
-                            display: 'flex', justifyContent: 'center', alignItems: 'center',
-                            zIndex: 3, flexShrink: 0
-                          }}>
-                            <Icon size={24} />
-                          </div>
-                          <div className="dotted-line" style={{ 
-                            flex: 1, borderTop: '2px dashed currentColor', opacity: 0.3, 
-                            marginRight: '-2rem' // connect to center column
-                          }}></div>
-                        </div>
-                        
-                        {/* Text Group */}
-                        <div className="text-group" style={{ marginTop: '2rem', paddingLeft: '2rem' }}>
-                          <span style={{ fontSize: '0.9rem', fontWeight: 700, letterSpacing: '0.1em', color: 'var(--text-primary)', opacity: 0.8, textTransform: 'uppercase' }}>
-                            {item.step}
-                          </span>
-                          <h3 style={{ fontSize: '2.2rem', fontWeight: 700, margin: '0.8rem 0', color: 'var(--text-primary)', lineHeight: 1.1 }}>
-                            {item.title}
-                          </h3>
-                          <p style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-                            {item.desc}
-                          </p>
-                        </div>
+                      <div className="text-group">
+                        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--accent-color)', fontFamily: 'var(--font-mono)' }}>{item.step}</span>
+                        <h3 style={{ fontSize: '2.5rem', fontWeight: 700, margin: '0.5rem 0', lineHeight: 1 }}>{item.title}</h3>
+                        <p style={{ fontSize: '1.1rem', opacity: 0.6, maxWidth: '400px' }}>{item.desc}</p>
                       </div>
                     )}
                   </div>
 
-                  {/* Center Column (Dot) */}
-                  <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+                  <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div className="icon-circle" style={{ 
+                        width: '60px', height: '60px', borderRadius: '50%', 
+                        backgroundColor: 'var(--bg-color)', 
+                        border: '1px solid var(--border-color)',
+                        color: 'var(--text-primary)', 
+                        display: 'flex', justifyContent: 'center', alignItems: 'center',
+                        zIndex: 3, boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
+                    }}>
+                        <Icon size={24} />
+                    </div>
                     <div className="center-dot" style={{ 
-                      position: 'absolute', top: '25px', transform: 'translateY(-50%)',
-                      width: '12px', height: '12px', borderRadius: '50%', 
-                      backgroundColor: 'var(--text-primary)', zIndex: 3 
+                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                        width: '8px', height: '8px', borderRadius: '50%', 
+                        backgroundColor: 'var(--accent-color)', zIndex: 4 
                     }}></div>
                   </div>
 
-                  {/* Right Column */}
-                  <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    alignItems: 'flex-start', 
-                    textAlign: 'left', 
-                    position: 'relative'
-                  }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: !isLeft ? 'flex-start' : 'flex-end', textAlign: !isLeft ? 'left' : 'right', opacity: !isLeft ? 1 : 0.05, filter: !isLeft ? 'none' : 'blur(2px)' }}>
                     {!isLeft && (
-                      <div style={{ width: '100%' }}>
-                        {/* Dotted line & Icon row */}
-                        <div style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative', flexDirection: 'row-reverse' }}>
-                          <div className="icon-circle" style={{ 
-                            width: '50px', height: '50px', borderRadius: '50%', 
-                            backgroundColor: 'var(--text-primary)', color: 'var(--bg-color)', 
-                            display: 'flex', justifyContent: 'center', alignItems: 'center',
-                            zIndex: 3, flexShrink: 0
-                          }}>
-                            <Icon size={24} />
-                          </div>
-                          <div className="dotted-line" style={{ 
-                            flex: 1, borderTop: '2px dashed currentColor', opacity: 0.3, 
-                            marginLeft: '-2rem' // connect to center column
-                          }}></div>
-                        </div>
-                        
-                        {/* Text Group */}
-                        <div className="text-group" style={{ marginTop: '2rem', paddingRight: '2rem' }}>
-                          <span style={{ fontSize: '0.9rem', fontWeight: 700, letterSpacing: '0.1em', color: 'var(--text-primary)', opacity: 0.8, textTransform: 'uppercase' }}>
-                            {item.step}
-                          </span>
-                          <h3 style={{ fontSize: '2.2rem', fontWeight: 700, margin: '0.8rem 0', color: 'var(--text-primary)', lineHeight: 1.1 }}>
-                            {item.title}
-                          </h3>
-                          <p style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-                            {item.desc}
-                          </p>
-                        </div>
+                      <div className="text-group">
+                        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--accent-color)', fontFamily: 'var(--font-mono)' }}>{item.step}</span>
+                        <h3 style={{ fontSize: '2.5rem', fontWeight: 700, margin: '0.5rem 0', lineHeight: 1 }}>{item.title}</h3>
+                        <p style={{ fontSize: '1.1rem', opacity: 0.6, maxWidth: '400px' }}>{item.desc}</p>
                       </div>
                     )}
                   </div>
@@ -225,7 +305,12 @@ const About = () => {
             })}
           </div>
         </div>
-        
+      </div>
+
+      <div style={{ marginTop: '15rem' }}>
+        {renderMarquee('Frontend Architecture', frontendSkills)}
+        {renderMarquee('Scalable Backend', backendSkills)}
+        {renderMarquee('Environment & Workflow', toolSkills)}
       </div>
     </section>
   );
